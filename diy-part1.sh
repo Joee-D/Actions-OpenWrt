@@ -19,3 +19,7 @@ echo 'src-git passwall_pkg https://github.com/xiaorouji/openwrt-passwall.git;pac
 echo 'src-git passwall_luci https://github.com/xiaorouji/openwrt-passwall.git;luci-smartdns-new-version' >>feeds.conf.default
 echo 'src-git openclash https://github.com/vernesong/OpenClash.git' >>feeds.conf.default
 echo 'src-git smartdns https://github.com/pymumu/smartdns.git' >>feeds.conf.default
+
+# Change Theme
+rm -rf feeds/luci/themes/luci-theme-argon
+git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git feeds/luci/themes/luci-theme-argon
