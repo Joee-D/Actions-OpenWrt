@@ -18,9 +18,3 @@ git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git feeds/luci/
 
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.1.2/g' package/base-files/files/bin/config_generate
-
-# Change Cpu Mode
-sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/generic/config-5.15
-sed -i 's/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_GOV_PERFORMANCE/g' target/linux/x86/generic/config-5.15
-sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/generic/config-6.1
-sed -i 's/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_GOV_PERFORMANCE/g' target/linux/x86/generic/config-6.1
