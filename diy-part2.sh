@@ -51,3 +51,7 @@ cd ../../..
 
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.1.2/g' package/base-files/files/bin/config_generate
+# Modify Hostname
+sed -i 's/OpenWrt/Joee/g' package/base-files/files/bin/config_generate
+# Modify Timezone
+sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
