@@ -21,5 +21,6 @@ echo 'src-git helloworld https://github.com/fw876/helloworld' >>feeds.conf.defau
 echo 'src-git passwall_pkg https://github.com/xiaorouji/openwrt-passwall.git;packages' >>feeds.conf.default
 echo 'src-git passwall_luci https://github.com/xiaorouji/openwrt-passwall.git;luci' >>feeds.conf.default
 echo 'src-git openclash https://github.com/vernesong/OpenClash.git' >>feeds.conf.default
+echo 'src-git lienol https://github.com/Lienol/openwrt-package.git' >>feeds.conf.default
 echo 'src-cpy smartdns tmp/smartdns' >>feeds.conf.default
 echo 'src-cpy smartdns_luci tmp/smartdns_luci' >>feeds.conf.default
