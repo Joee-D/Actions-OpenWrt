@@ -12,15 +12,3 @@
 
 # Uncomment a feed source
 #sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default
-
-git clone -b lede https://github.com/pymumu/luci-app-smartdns.git tmp/smartdns_luci/luci-app-smartdns
-git clone https://github.com/pymumu/openwrt-smartdns.git tmp/smartdns/smartdns
-
-# Add a feed source
-echo 'src-git helloworld https://github.com/fw876/helloworld' >>feeds.conf.default
-echo 'src-git passwall_pkg https://github.com/xiaorouji/openwrt-passwall.git;packages' >>feeds.conf.default
-echo 'src-git passwall_luci https://github.com/xiaorouji/openwrt-passwall.git;luci' >>feeds.conf.default
-echo 'src-git openclash https://github.com/vernesong/OpenClash.git' >>feeds.conf.default
-echo 'src-git lienol https://github.com/Lienol/openwrt-package.git' >>feeds.conf.default
-echo 'src-cpy smartdns tmp/smartdns' >>feeds.conf.default
-echo 'src-cpy smartdns_luci tmp/smartdns_luci' >>feeds.conf.default
