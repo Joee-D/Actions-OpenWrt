@@ -10,11 +10,14 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
-# Change Cpu Mode
-sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-5.10
-sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-5.10
+### Replace Packages
+# dockerman
+rm -rf feeds/luci/applications/luci-app-dockerman
+git clone --depth 1 https://github.com/lisaac/luci-app-dockerman.git tmp/luci-app-dockerman
+cp -r tmp/luci-app-dockerman/applications/luci-app-dockerman feeds/luci/applications
+rm -rf tmp/luci-app-dockerman
 
-# Add Packages
+### Add Packages
 rm -r package/others -f
 mkdir package/others
 # ssr+
@@ -23,10 +26,11 @@ git clone --depth 1 https://github.com/fw876/helloworld package/others/helloworl
 git clone --depth 1 -b packages https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall_pkg
 git clone --depth 1 -b luci-smartdns-new-version https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall_luci
 # smartdns
-mkdir package/others/smartdns_luci
-git clone --depth 1 -b lede https://github.com/pymumu/luci-app-smartdns.git package/others/smartdns_luci/luci-app-smartdns
 mkdir package/others/smartdns
 git clone --depth 1 https://github.com/pymumu/openwrt-smartdns.git package/others/smartdns/smartdns
+mkdir package/others/smartdns_luci
+git clone --depth 1 https://github.com/pymumu/luci-app-smartdns.git package/others/smartdns_luci/luci-app-smartdns
+sed -i 's#../../luci.mk#$(TOPDIR)/feeds/luci/luci.mk#g' package/others/smartdns_luci/luci-app-smartdns/Makefile
 # openclash
 mkdir package/others/openclash
 cd package/others/openclash
@@ -48,6 +52,10 @@ git pull --depth 1 origin main
 git branch --set-upstream-to=origin/main master
 cd ../../..
 
+### Others
+# Change Cpu Mode
+sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-5.10
+sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-5.10
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.1.2/g' package/base-files/files/bin/config_generate
 # Modify Hostname
