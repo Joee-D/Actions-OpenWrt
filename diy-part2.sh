@@ -11,30 +11,30 @@
 #
 
 # Change Cpu Mode
-#sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-5.15
-#sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-5.15
-#sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-6.1
-#sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-6.1
+sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-5.15
+sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-5.15
+sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-6.1
+sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-6.1
 
 # Change Theme
-rm -rf feeds/luci/applications/luci-app-argon-config
-git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config.git feeds/luci/applications/luci-app-argon-config
-rm -rf feeds/luci/themes/luci-theme-argon
-git clone --depth 1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git feeds/luci/themes/luci-theme-argon
+#rm -rf feeds/luci/applications/luci-app-argon-config
+#git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config.git feeds/luci/applications/luci-app-argon-config
+#rm -rf feeds/luci/themes/luci-theme-argon
+#git clone --depth 1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git feeds/luci/themes/luci-theme-argon
 
 # Add Packages
 rm -r package/others -f
 mkdir package/others
 # ssr+
-git clone --depth 1 https://github.com/fw876/helloworld package/others/helloworld
+#git clone --depth 1 https://github.com/fw876/helloworld package/others/helloworld
 # passwall
-git clone --depth 1 -b packages https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall_pkg
-git clone --depth 1 -b luci-smartdns-new-version https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall_luci
+#git clone --depth 1 -b packages https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall_pkg
+#git clone --depth 1 -b luci-smartdns-new-version https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall_luci
 # smartdns
-mkdir package/others/smartdns_luci
-git clone --depth 1 -b lede https://github.com/pymumu/luci-app-smartdns.git package/others/smartdns_luci/luci-app-smartdns
-mkdir package/others/smartdns
-git clone --depth 1 https://github.com/pymumu/openwrt-smartdns.git package/others/smartdns/smartdns
+#mkdir package/others/smartdns_luci
+#git clone --depth 1 -b lede https://github.com/pymumu/luci-app-smartdns.git package/others/smartdns_luci/luci-app-smartdns
+#mkdir package/others/smartdns
+#git clone --depth 1 https://github.com/pymumu/openwrt-smartdns.git package/others/smartdns/smartdns
 # openclash
 mkdir package/others/openclash
 cd package/others/openclash
@@ -46,19 +46,19 @@ git pull --depth 1 origin master
 git branch --set-upstream-to=origin/master master
 cd ../../..
 # fileassistant
-mkdir package/others/fileassistant
-cd package/others/fileassistant
-git init
-git remote add origin https://github.com/Lienol/openwrt-package.git
-git config core.sparsecheckout true
-echo "luci-app-fileassistant" >> .git/info/sparse-checkout
-git pull --depth 1 origin main
-git branch --set-upstream-to=origin/main master
+#mkdir package/others/fileassistant
+#cd package/others/fileassistant
+#git init
+#git remote add origin https://github.com/Lienol/openwrt-package.git
+#git config core.sparsecheckout true
+#echo "luci-app-fileassistant" >> .git/info/sparse-checkout
+#git pull --depth 1 origin main
+#git branch --set-upstream-to=origin/main master
 cd ../../..
 
 # Modify default IP
-sed -i 's/192.168.1.1/192.168.1.2/g' package/base-files/files/bin/config_generate
+#sed -i 's/192.168.1.1/192.168.1.2/g' package/base-files/files/bin/config_generate
 # Modify Hostname
-sed -i 's/OpenWrt/Joee/g' package/base-files/files/bin/config_generate
+#sed -i 's/OpenWrt/Joee/g' package/base-files/files/bin/config_generate
 # Modify Timezone
 sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
