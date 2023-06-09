@@ -76,3 +76,6 @@ cd ../../..
 
 # Modify Timezone
 sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
+sed -i 's/	if/#if/g' feeds/packages/utils/cgroupfs-mount/files/cgroupfs-mount.init
+sed -i 's/		umount/#	umount/g' feeds/packages/utils/cgroupfs-mount/files/cgroupfs-mount.init
+sed -i 's/	fi/#fi/g' feeds/packages/utils/cgroupfs-mount/files/cgroupfs-mount.init
