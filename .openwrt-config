@@ -2798,9 +2798,9 @@ CONFIG_ZRAM_DEF_COMP_LZORLE=y
 #
 # CONFIG_PACKAGE_kmod-backlight-pwm is not set
 # CONFIG_PACKAGE_kmod-drm-amdgpu is not set
-# CONFIG_PACKAGE_kmod-drm-kms-helper is not set
+CONFIG_PACKAGE_kmod-drm-kms-helper=y
 # CONFIG_PACKAGE_kmod-drm-radeon is not set
-# CONFIG_PACKAGE_kmod-drm-ttm is not set
+CONFIG_PACKAGE_kmod-drm-ttm=y
 # CONFIG_PACKAGE_kmod-fb is not set
 # CONFIG_PACKAGE_kmod-fb-cfb-copyarea is not set
 # CONFIG_PACKAGE_kmod-fb-cfb-fillrect is not set
