@@ -77,5 +77,3 @@ cd ../../..
 
 # Modify Timezone
 sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
-# Support DRM
-sed -i '$r drm-i915.txt' package/kernel/linux/modules/video.mk
