@@ -10,9 +10,10 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
-# Change Cpu Modesed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-5.15
-#sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-5.15
-#$sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-6.1
+# Change Cpu Mode
+sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-5.15
+sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-5.15
+#sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-6.1
 #sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-6.1
 
 # Change Theme
@@ -76,6 +77,5 @@ cd ../../..
 
 # Modify Timezone
 sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
-sed -i 's/	if/#if/g' feeds/packages/utils/cgroupfs-mount/files/cgroupfs-mount.init
-sed -i 's/		umount/#	umount/g' feeds/packages/utils/cgroupfs-mount/files/cgroupfs-mount.init
-sed -i 's/	fi/#fi/g' feeds/packages/utils/cgroupfs-mount/files/cgroupfs-mount.init
+# Support DRM
+sed -i '$r drm-i915.txt' package/kernel/linux/modules/video.mk
