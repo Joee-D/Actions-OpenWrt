@@ -72,9 +72,9 @@ cd ../../..
 sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
 
 #安装glk_dmc_ver1_04.bin包
-mkdir /lib/firmware/i915
-curl -L https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/i915/glk_dmc_ver1_04.bin -o /lib/firmware/i915/glk_dmc_ver1_04.bin
+mkdir -p target/linux/x86/64/files/firmware/i915
+curl -L https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/i915/glk_dmc_ver1_04.bin -o target/linux/x86/64/files/firmware/i915/glk_dmc_ver1_04.bin
 # 添加 'i915/glk_dmc_ver1_04.bin' 到5.15的内核
 echo 'CONFIG_FIRMWARE_IN_KERNEL=y' >> target/linux/x86/64/config-5.15
 echo 'CONFIG_EXTRA_FIRMWARE="i915/glk_dmc_ver1_04.bin"' >> target/linux/x86/64/config-5.15
-echo 'CONFIG_EXTRA_FIRMWARE_DIR="/lib/firmware"' >> target/linux/x86/64/config-5.15
+echo 'CONFIG_EXTRA_FIRMWARE_DIR="firmware"' >> target/linux/x86/64/config-5.15
