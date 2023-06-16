@@ -75,6 +75,7 @@ sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
 cp -f files/docker-makefile feeds/packages/utils/docker/Makefile
 cp -f files/dockerd-makefile feeds/packages/utils/dockerd/Makefile
 cp -f files/dockerd-patch feeds/packages/utils/dockerd/patches/001-libdevmapper_name_fix.patch
+cp -f files/containerd-makefile feeds/packages/utils/containerd/Makefile
 
 # 安装glk_dmc_ver1_04.bin包
 mkdir -p firmware/i915
