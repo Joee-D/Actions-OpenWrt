@@ -72,9 +72,9 @@ cd ../../..
 sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
 
 # update docker/dockerd 24.0.2
-cp -f docker-makefile feeds/packages/utils/docker/Makefile
-cp -f dockerd-makefile feeds/packages/utils/dockerd/Makefile
-cp -f dockerd-patch feeds/packages/utils/dockerd/patches/001-libdevmapper_name_fix.patch
+cp -f files/docker-makefile feeds/packages/utils/docker/Makefile
+cp -f files/dockerd-makefile feeds/packages/utils/dockerd/Makefile
+cp -f files/dockerd-patch feeds/packages/utils/dockerd/patches/001-libdevmapper_name_fix.patch
 
 # 安装glk_dmc_ver1_04.bin包
 mkdir -p firmware/i915
