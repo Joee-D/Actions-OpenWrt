@@ -71,7 +71,12 @@ cd ../../..
 # Modify Timezone
 sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
 
-#安装glk_dmc_ver1_04.bin包
+# update docker/dockerd 24.0.2
+cp -f docker-makefile feeds/packages/utils/docker/Makefile
+cp -f dockerd-makefile feeds/packages/utils/dockerd/Makefile
+cp -f dockerd-patch feeds/packages/utils/dockerd/patches/001-libdevmapper_name_fix.patch
+
+# 安装glk_dmc_ver1_04.bin包
 mkdir -p firmware/i915
 curl -L https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/i915/glk_dmc_ver1_04.bin -o firmware/i915/glk_dmc_ver1_04.bin
 # 添加 'i915/glk_dmc_ver1_04.bin' 到5.15的内核
