@@ -31,8 +31,8 @@ mkdir package/others
 
 # passwall
 git clone --depth 1 -b packages https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall_pkg
-#git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall
-git clone --depth 1 -b luci-smartdns-new-version https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall
+git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall
+#git clone --depth 1 -b luci-smartdns-new-version https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall
 #git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/others/passwall2
 # smartdns
 #mkdir package/others/smartdns_luci
