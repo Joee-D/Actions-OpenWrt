@@ -41,7 +41,7 @@ git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall.git pa
 #git clone --depth 1 https://github.com/pymumu/openwrt-smartdns.git package/others/smartdns/smartdns
 
 # openclash
-#mkdir package/otherss/openclash
+#mkdir package/others/openclash
 #cd package/others/openclash
 #git init
 #git remote add origin https://github.com/vernesong/OpenClash.git
