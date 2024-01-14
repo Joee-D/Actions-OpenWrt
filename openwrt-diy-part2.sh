@@ -30,10 +30,10 @@ mkdir package/others
 #git clone --depth 1 https://github.com/fw876/helloworld package/others/helloworld
 
 # passwall
-git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/others/passwall_pkg
-#git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall
+#git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/others/passwall_pkg
+#git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall
 #git clone --depth 1 -b luci-smartdns-new-version https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall
-git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/others/passwall2
+#git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/others/passwall2
 
 # smartdns
 #mkdir package/others/smartdns_luci
@@ -42,15 +42,15 @@ git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/o
 #git clone --depth 1 https://github.com/pymumu/openwrt-smartdns.git package/others/smartdns/smartdns
 
 # openclash
-#mkdir package/others/openclash
-#cd package/others/openclash
-#git init
-#git remote add origin https://github.com/vernesong/OpenClash.git
-#git config core.sparsecheckout true
-#echo "luci-app-openclash" >> .git/info/sparse-checkout
-#git pull --depth 1 origin master
-#git branch --set-upstream-to=origin/master master
-#cd ../../..
+mkdir package/others/openclash
+cd package/others/openclash
+git init
+git remote add origin https://github.com/vernesong/OpenClash.git
+git config core.sparsecheckout true
+echo "luci-app-openclash" >> .git/info/sparse-checkout
+git pull --depth 1 origin master
+git branch --set-upstream-to=origin/master master
+cd ../../..
 
 # fileassistant
 #mkdir package/others/fileassistant
