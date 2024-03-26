@@ -16,6 +16,9 @@ sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' targ
 #sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-6.1
 #sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-6.1
 
+# Fix docker network
+sed -i 's/v.IPAM and/v.IPAM and v.IPAM.Config and/g' package/feeds/luci/luci-app-dockerman/luasrc/model/cbi/dockerman/networks.lua
+
 # Change Theme
 #rm -rf feeds/luci/applications/luci-app-argon-config
 #git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config.git feeds/luci/applications/luci-app-argon-config
