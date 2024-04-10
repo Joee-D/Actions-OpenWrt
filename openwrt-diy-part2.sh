@@ -33,8 +33,8 @@ mkdir package/others
 #git clone --depth 1 https://github.com/fw876/helloworld package/others/helloworld
 
 # passwall
-#git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/others/passwall_pkg
-#git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall
+git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages.git package/others/passwall_pkg
+git clone --depth 1 -b luci https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall
 #git clone --depth 1 -b luci-smartdns-new-version https://github.com/xiaorouji/openwrt-passwall.git package/others/passwall
 #git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall2.git package/others/passwall2
 
