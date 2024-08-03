@@ -11,8 +11,8 @@
 #
 
 # Change Cpu Mode
-sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-5.15
-sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-5.15
+#sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-5.15
+#sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-5.15
 #sed -i 's/CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL/CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE/g' target/linux/x86/64/config-6.1
 #sed -i '/CONFIG_CPU_FREQ_GOV_SCHEDUTIL/a\CONFIG_CPU_FREQ_GOV_PERFORMANCE=y' target/linux/x86/64/config-6.1
 
@@ -54,18 +54,6 @@ echo "luci-app-openclash" >> .git/info/sparse-checkout
 git pull --depth 1 origin master
 git branch --set-upstream-to=origin/master master
 cd ../../..
-
-# fileassistant
-#mkdir package/others/fileassistant
-#cd package/others/fileassistant
-#git init
-#git remote add origin https://github.com/Lienol/openwrt-package.git
-#git config core.sparsecheckout true
-#echo "luci-app-fileassistant" >> .git/info/sparse-checkout
-#git pull --depth 1 origin main
-#git branch --set-upstream-to=origin/main master
-#cd ../../..
-
 
 # Modify default IP
 #sed -i 's/192.168.1.1/192.168.1.2/g' package/base-files/files/bin/config_generate
