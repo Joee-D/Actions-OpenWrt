@@ -15,9 +15,7 @@ rm -r package/others -f
 mkdir package/others
 
 #OpenWrt-mihomo
-git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git
-
-cd ../..
+git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git package/others
 
 # 添加 'i915/glk_dmc_ver1_04.bin' 到5.15的内核
 mkdir -p firmware/i915
@@ -30,14 +28,14 @@ echo 'CONFIG_EXTRA_FIRMWARE_DIR="/workdir/openwrt/firmware"' >> target/linux/x86
 # 以下为其他配置
 
 # openclash
-mkdir package/others/openclash
-cd package/others/openclash
-git init
-git remote add origin https://github.com/vernesong/OpenClash.git
-git config core.sparsecheckout true
-echo "luci-app-openclash" >> .git/info/sparse-checkout
-git pull --depth 1 origin master
-git branch --set-upstream-to=origin/master master
+#mkdir package/others/openclash
+#cd package/others/openclash
+#git init
+#git remote add origin https://github.com/vernesong/OpenClash.git
+#git config core.sparsecheckout true
+#echo "luci-app-openclash" >> .git/info/sparse-checkout
+#git pull --depth 1 origin master
+#git branch --set-upstream-to=origin/master master
 
 # ssr+
 #git clone --depth 1 https://github.com/fw876/helloworld package/others/helloworld
