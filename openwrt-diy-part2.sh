@@ -17,7 +17,7 @@ mkdir package/others
 #OpenWrt-mihomo
 git clone --depth 1 https://github.com/morytyann/OpenWrt-mihomo.git
 
-cd ../../..
+cd ../..
 
 # 添加 'i915/glk_dmc_ver1_04.bin' 到5.15的内核
 mkdir -p firmware/i915
