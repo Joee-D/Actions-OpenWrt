@@ -14,11 +14,11 @@
 # curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh  --no-sfe
 
 # Add Packages
-rm -r package/others -f
-mkdir package/others
+#rm -r package/others -f
+#mkdir package/others
 
 #OpenWrt-mihomo
-git clone --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git package/others
+#git clone --depth 1 https://github.com/nikkinikki-org/OpenWrt-nikki.git package/others
 
 # 添加 'i915/glk_dmc_ver1_04.bin' 到6.6的内核
 #mkdir -p firmware/i915
