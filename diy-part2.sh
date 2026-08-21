@@ -68,7 +68,7 @@
 #sed -i 's/OpenWrt/Joee/g' package/base-files/files/bin/config_generate
 
 # Modify Timezone
-sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
+#sed -i 's/UTC/CST-8/g' package/base-files/files/bin/config_generate
 
 # Fix docker network
 # sed -i 's/v.IPAM and/v.IPAM and v.IPAM.Config and/g' package/feeds/luci/luci-app-dockerman/luasrc/model/cbi/dockerman/networks.lua
