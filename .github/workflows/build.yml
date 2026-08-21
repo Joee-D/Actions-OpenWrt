@@ -45,7 +45,9 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+        # 注意：ubuntu-24.04 的主 apt 源在 /etc/apt/sources.list.d/ubuntu.sources，
+        # 不能像 22.04 那样整个目录删除，否则 apt 找不到任何包
+        sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
         sudo docker image prune --all --force
         sudo -E apt-get -qq update
         # 注意：ubuntu-24.04 没有 python3-distutils（Python 3.12 已移除），故不安装
