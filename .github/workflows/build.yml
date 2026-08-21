@@ -60,13 +60,15 @@ jobs:
         mkdir -p $CCACHE_DIR
 
     - name: Setup swap
-      # 原生创建 4G swap，避免 make -j$(nproc) 编译时 OOM
-      # （fallocate 失败时回退到 dd 写入）
+      # 24.04 runner 镜像自带 /swapfile（已挂载），直接创建会报
+      # "Text file busy"；先检测是否已有 swap，没有才创建 4G swap
       run: |
-        sudo fallocate -l 4G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
-        sudo chmod 600 /swapfile
-        sudo mkswap /swapfile
-        sudo swapon /swapfile
+        if [ -z "$(swapon --show=NAME --noheadings)" ]; then
+          sudo fallocate -l 4G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+        fi
         free -h
 
     - name: Clone source code
