@@ -17,7 +17,8 @@ on:
   workflow_dispatch:
 
 env:
-  REPO_URL: https://git.openwrt.org/openwrt/openwrt.git
+  # 用 GitHub 镜像克隆，git.openwrt.org 在 CI 里经常慢/超时
+  REPO_URL: https://github.com/openwrt/openwrt.git
   #REPO_BRANCH: openwrt-24.10
   REPO_BRANCH: v25.12.5
   FEEDS_CONF: feeds.conf.default
@@ -28,10 +29,13 @@ env:
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
+  # ccache 缓存目录与上限（GitHub Actions cache 单仓库 10GB，dl 缓存也占额度）
+  CCACHE_DIR: /workdir/ccache
+  CCACHE_MAXSIZE: 4G
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout
@@ -44,12 +48,19 @@ jobs:
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
         sudo docker image prune --all --force
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev python3-distutils python3-setuptools rsync swig unzip zlib1g-dev file wget
+        # 注意：ubuntu-24.04 没有 python3-distutils（Python 3.12 已移除），故不安装
+        sudo -E apt-get -qq install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev python3-setuptools rsync swig unzip zlib1g-dev file wget ccache
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
+        mkdir -p $CCACHE_DIR
+
+    - name: Setup swap
+      uses: maxim-lobanov/setup-swap@v1
+      with:
+        swap-size: 8192
 
     - name: Clone source code
       working-directory: /workdir
@@ -57,6 +68,25 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt --depth 1
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+
+    - name: Cache OpenWrt downloads
+      uses: actions/cache@v4
+      with:
+        path: /workdir/openwrt/dl
+        key: dl-${{ hashFiles('feeds.conf.default', 'diy-part1.sh', 'config') }}
+        restore-keys: |
+          dl-
+        save-always: true
+
+    - name: Cache ccache
+      uses: actions/cache@v4
+      with:
+        path: /workdir/ccache
+        key: ccache-${{ github.ref }}-${{ github.run_id }}
+        restore-keys: |
+          ccache-${{ github.ref }}-
+          ccache-
+        save-always: true
 
     - name: Load custom feeds
       run: |
@@ -78,6 +108,8 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
+        # 启用 ccache，配合 actions/cache 缓存编译结果
+        echo 'CONFIG_CCACHE=y' >> .config
 
     - name: Download package
       id: package
@@ -86,7 +118,7 @@ jobs:
         make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
+        find dl -size -1024c -delete
 
     - name: Compile the firmware
       id: compile
@@ -130,14 +162,14 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
+        # 追加 run_number，避免同一分钟内多次触发时 tag 冲突
+        echo "release_tag=$(date +"%Y.%m.%d-%H%M")-${{ github.run_number }}" >> $GITHUB_OUTPUT
         touch release.txt
-        [ ${UPLOAD_GOFILE} = true && ${{ steps.gofile.outputs.url }} ] && echo "🔗 [GoFile](${{ steps.gofile.outputs.url }})" >> release.txt
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v2
-      if: steps.tag.outputs.status == 'success' && !cancelled()
+      if: steps.tag.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
