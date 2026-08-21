@@ -58,9 +58,14 @@ jobs:
         mkdir -p $CCACHE_DIR
 
     - name: Setup swap
-      uses: maxim-lobanov/setup-swap@v1
-      with:
-        swap-size: 8192
+      # 原生创建 4G swap，避免 make -j$(nproc) 编译时 OOM
+      # （fallocate 失败时回退到 dd 写入）
+      run: |
+        sudo fallocate -l 4G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
+        sudo chmod 600 /swapfile
+        sudo mkswap /swapfile
+        sudo swapon /swapfile
+        free -h
 
     - name: Clone source code
       working-directory: /workdir
