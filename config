@@ -208,6 +208,8 @@ CONFIG_KERNEL_BUILD_USER=""
 CONFIG_KERNEL_BUILD_DOMAIN=""
 CONFIG_KERNEL_PRINTK=y
 CONFIG_KERNEL_SWAP=y
+CONFIG_KERNEL_TCP_CONG_ADVANCED=y
+CONFIG_KERNEL_TCP_CONG_BBR=y
 # CONFIG_KERNEL_PROC_STRIPPED is not set
 CONFIG_KERNEL_DEBUG_FS=y
 # CONFIG_KERNEL_X86_VSYSCALL_EMULATION is not set
@@ -424,7 +426,7 @@ CONFIG_EXTERNAL_KERNEL_TREE=""
 CONFIG_KERNEL_GIT_CLONE_URI=""
 CONFIG_BUILD_LOG_DIR=""
 CONFIG_EXTRA_OPTIMIZATION="-fno-caller-saves -fno-plt"
-CONFIG_TARGET_OPTIMIZATION="-Os -pipe"
+CONFIG_TARGET_OPTIMIZATION="-O2 -pipe"
 CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS=""
 CONFIG_EXTRA_GCC_CONFIG_OPTIONS=""
 CONFIG_NASM=y
@@ -6540,7 +6542,7 @@ CONFIG_PACKAGE_uhttpd-mod-ubus=y
 # CONFIG_PACKAGE_esp2net is not set
 # CONFIG_PACKAGE_etherwake is not set
 # CONFIG_PACKAGE_etherwake-nfqueue is not set
-# CONFIG_PACKAGE_ethtool is not set
+CONFIG_PACKAGE_ethtool=y
 # CONFIG_PACKAGE_ethtool-full is not set
 # CONFIG_PACKAGE_evilginx2 is not set
 # CONFIG_PACKAGE_external-protocol is not set
@@ -6576,7 +6578,7 @@ CONFIG_PACKAGE_uhttpd-mod-ubus=y
 # CONFIG_PACKAGE_iftop is not set
 # CONFIG_PACKAGE_iiod is not set
 # CONFIG_PACKAGE_iperf is not set
-# CONFIG_PACKAGE_iperf3 is not set
+CONFIG_PACKAGE_iperf3=y
 # CONFIG_PACKAGE_iperf3-ssl is not set
 # CONFIG_PACKAGE_ipip is not set
 # CONFIG_PACKAGE_ipset is not set
@@ -6747,7 +6749,7 @@ CONFIG_SAMBA4_SERVER_VFS=y
 # CONFIG_PACKAGE_tac_plus is not set
 # CONFIG_PACKAGE_tac_plus-pam is not set
 # CONFIG_PACKAGE_tayga is not set
-# CONFIG_PACKAGE_tcpdump is not set
+CONFIG_PACKAGE_tcpdump=y
 # CONFIG_PACKAGE_tcpdump-mini is not set
 # CONFIG_PACKAGE_telnet-bsd is not set
 # CONFIG_PACKAGE_tgt is not set
@@ -7488,7 +7490,7 @@ CONFIG_PACKAGE_dockerd=y
 # CONFIG_PACKAGE_inotifywatch is not set
 # CONFIG_PACKAGE_io is not set
 # CONFIG_PACKAGE_ipcs is not set
-# CONFIG_PACKAGE_irqbalance is not set
+CONFIG_PACKAGE_irqbalance=y
 # CONFIG_PACKAGE_isadump is not set
 # CONFIG_PACKAGE_isaset is not set
 # CONFIG_PACKAGE_iwcap is not set
