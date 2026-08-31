@@ -85,7 +85,7 @@ jobs:
         run: |
           cd openwrt
           make download -j"$(nproc)" || make download -j1 V=s
-          find dl -type f -size -1024c -print -delete
+          find dl -type f ! -path 'dl/go-mod-cache/*' -size -1024c -print -delete
 
       - name: Compile firmware
         id: compile
