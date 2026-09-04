@@ -75,11 +75,29 @@ jobs:
           if [ -e files ]; then
             mv files openwrt/files
           fi
-          mv "$CONFIG_FILE" openwrt/.config
+          if [ -e "$CONFIG_FILE" ]; then
+            # Snapshot the seed symbols (the settings we intentionally override)
+            grep -oE '^(# )?CONFIG_[A-Za-z0-9_-]+' "$CONFIG_FILE" | sed -E 's/^# //' | sort -u > /tmp/seed-symbols.txt
+            mv "$CONFIG_FILE" openwrt/.config
+          fi
           chmod +x "$DIY_P2_SH"
           cd openwrt
           "$GITHUB_WORKSPACE/$DIY_P2_SH"
           make defconfig
+          # Guard: every seed symbol must still exist after defconfig.
+          # A missing symbol means it was renamed/removed upstream - fail
+          # loudly instead of silently dropping a package on version bumps.
+          if [ -s /tmp/seed-symbols.txt ]; then
+            missing=""
+            while read -r sym; do
+              grep -qE "^# ${sym} is not set|^${sym}=" .config || missing="$missing $sym"
+            done < /tmp/seed-symbols.txt
+            if [ -n "$missing" ]; then
+              echo "::error::Seed options missing after make defconfig (renamed or removed upstream):"
+              echo "$missing"
+              exit 1
+            fi
+          fi
 
       - name: Download package sources
         run: |
