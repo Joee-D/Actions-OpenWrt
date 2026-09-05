@@ -72,12 +72,14 @@ jobs:
       - name: Configure source
         run: |
           cat feeds.conf.extra >> openwrt/feeds.conf.default
+          cd openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+          cd ..
           cp config openwrt/.config
           mkdir -p openwrt/files
           cp -a files/. openwrt/files/
           cd openwrt
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
           make defconfig
 
       - name: Download package sources
