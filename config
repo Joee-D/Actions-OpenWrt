@@ -8,66 +8,27 @@ CONFIG_TARGET_x86_64_DEVICE_generic=y
 # ------------------------------------------------------------
 # ② 固件与分区（Image / Partition）
 # ------------------------------------------------------------
-# 不需要 GRUB 镜像
-# CONFIG_GRUB_IMAGES is not set
 # 内核分区 32MB / 根分区 2GB
 CONFIG_TARGET_KERNEL_PARTSIZE=32
 CONFIG_TARGET_ROOTFS_PARTSIZE=2048
+# UEFI 启动（combined-efi.img），不需要 legacy BIOS 镜像
+# CONFIG_GRUB_IMAGES is not set
 # 不要 ext4 / tar.gz 根文件系统镜像
 # CONFIG_TARGET_ROOTFS_EXT4FS is not set
 # CONFIG_TARGET_ROOTFS_TARGZ is not set
 
 # ------------------------------------------------------------
-# ③ 内核选项（Kernel）
+# ③ 内核（Kernel）
 # ------------------------------------------------------------
 # 省空间：不带内核调试信息
 # CONFIG_KERNEL_DEBUG_INFO is not set
-
-# ------------------------------------------------------------
-# ④ 内核模块（kmod，多为防火墙/Docker/文件系统的依赖）
-# ------------------------------------------------------------
-CONFIG_PACKAGE_kmod-br-netfilter=y
-CONFIG_PACKAGE_kmod-crypto-acompress=y
-CONFIG_PACKAGE_kmod-crypto-blake2b=y
-CONFIG_PACKAGE_kmod-crypto-xxhash=y
-CONFIG_PACKAGE_kmod-dummy=y
-CONFIG_PACKAGE_kmod-fs-autofs4=y
-CONFIG_PACKAGE_kmod-fs-btrfs=y
-CONFIG_PACKAGE_kmod-fuse=y
-CONFIG_PACKAGE_kmod-inet-diag=y
-CONFIG_PACKAGE_kmod-ip6tables=y
-CONFIG_PACKAGE_kmod-ipt-conntrack=y
-CONFIG_PACKAGE_kmod-ipt-core=y
-CONFIG_PACKAGE_kmod-ipt-extra=y
-CONFIG_PACKAGE_kmod-ipt-nat=y
-CONFIG_PACKAGE_kmod-ipt-nat6=y
-CONFIG_PACKAGE_kmod-ipt-physdev=y
-CONFIG_PACKAGE_kmod-lib-lzo=y
-CONFIG_PACKAGE_kmod-lib-raid6=y
-CONFIG_PACKAGE_kmod-lib-xor=y
-CONFIG_PACKAGE_kmod-lib-xxhash=y
-CONFIG_PACKAGE_kmod-lib-zlib-deflate=y
-CONFIG_PACKAGE_kmod-lib-zlib-inflate=y
-CONFIG_PACKAGE_kmod-lib-zstd=y
-CONFIG_PACKAGE_kmod-nf-conntrack-netlink=y
-CONFIG_PACKAGE_kmod-nf-ipt=y
-CONFIG_PACKAGE_kmod-nf-ipt6=y
-CONFIG_PACKAGE_kmod-nf-ipvs=y
-CONFIG_PACKAGE_kmod-nf-nat6=y
-CONFIG_PACKAGE_kmod-nf-socket=y
-CONFIG_PACKAGE_kmod-nf-tproxy=y
-CONFIG_PACKAGE_kmod-nft-compat=y
-CONFIG_PACKAGE_kmod-nft-socket=y
-CONFIG_PACKAGE_kmod-nft-tproxy=y
-# BBR 拥塞控制
+# BBR 拥塞控制（唯一显式保留的内核模块）
 CONFIG_PACKAGE_kmod-tcp-bbr=y
-# Docker 需要：tun / veth
-CONFIG_PACKAGE_kmod-tun=y
-CONFIG_PACKAGE_kmod-veth=y
 
 # ------------------------------------------------------------
-# ⑤ LuCI 界面（核心 + 应用 + 模块）
+# ④ LuCI 应用与中文（后端与语言包全部自动勾选，无需写）
 # ------------------------------------------------------------
+# 中文开关：自动补全各 luci-app 的 zh-cn 语言包（升级后界面变英文则加回 luci-i18n-base-zh-cn）
 CONFIG_LUCI_LANG_zh_Hans=y
 CONFIG_PACKAGE_luci=y
 CONFIG_PACKAGE_luci-app-attendedsysupgrade=y
@@ -80,191 +41,22 @@ CONFIG_PACKAGE_luci-app-package-manager=y
 CONFIG_PACKAGE_luci-app-samba4=y
 CONFIG_PACKAGE_luci-app-ttyd=y
 CONFIG_PACKAGE_luci-app-upnp=y
-CONFIG_PACKAGE_luci-base=y
-CONFIG_PACKAGE_luci-compat=y
-CONFIG_PACKAGE_luci-lib-base=y
-CONFIG_PACKAGE_luci-lib-ip=y
-CONFIG_PACKAGE_luci-lib-jsonc=y
-CONFIG_PACKAGE_luci-lib-nixio=y
-CONFIG_PACKAGE_luci-lib-uqr=y
-CONFIG_PACKAGE_luci-light=y
-CONFIG_PACKAGE_luci-lua-runtime=y
-CONFIG_PACKAGE_luci-mod-admin-full=y
-CONFIG_PACKAGE_luci-mod-network=y
-CONFIG_PACKAGE_luci-mod-status=y
-CONFIG_PACKAGE_luci-mod-system=y
-CONFIG_PACKAGE_luci-proto-ipv6=y
-CONFIG_PACKAGE_luci-proto-ppp=y
-CONFIG_PACKAGE_luci-theme-bootstrap=y
 
 # ------------------------------------------------------------
-# ⑥ LuCI 中文语言包（i18n zh-cn）
+# ⑤ 唯一必须显式保留（实测不自动补齐）
 # ------------------------------------------------------------
-CONFIG_PACKAGE_luci-i18n-attendedsysupgrade-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-base-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-ddns-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-dockerman-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-firewall-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-frpc-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-nikki-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-package-manager-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-samba4-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-upnp-zh-cn=y
-
-# ------------------------------------------------------------
-# ⑦ Docker 容器套件
-# ------------------------------------------------------------
-CONFIG_PACKAGE_containerd=y
-CONFIG_PACKAGE_docker=y
-CONFIG_PACKAGE_docker-compose=y
-CONFIG_PACKAGE_dockerd=y
-CONFIG_PACKAGE_runc=y
-CONFIG_PACKAGE_tini=y
-
-# ------------------------------------------------------------
-# ⑧ Samba 文件共享（NAS）
-# ------------------------------------------------------------
-CONFIG_PACKAGE_avahi-dbus-daemon=y
-CONFIG_PACKAGE_samba4-libs=y
-CONFIG_PACKAGE_samba4-server=y
-CONFIG_PACKAGE_wsdd2=y
-CONFIG_SAMBA4_SERVER_AVAHI=y
-CONFIG_SAMBA4_SERVER_NETBIOS=y
-CONFIG_SAMBA4_SERVER_VFS=y
-CONFIG_SAMBA4_SERVER_WSDD2=y
-
-# ------------------------------------------------------------
-# ⑨ 网络工具与应用（DDNS / 内网穿透 / 代理等）
-# ------------------------------------------------------------
-CONFIG_PACKAGE_attendedsysupgrade-common=y
-CONFIG_PACKAGE_ca-certificates=y
-CONFIG_PACKAGE_curl=y
-CONFIG_PACKAGE_ddns-scripts=y
+# Cloudflare DDNS 提供者（对应 luci-app-ddns；其余后端全部自动勾选）
 CONFIG_PACKAGE_ddns-scripts-cloudflare=y
-CONFIG_PACKAGE_ddns-scripts-services=y
-CONFIG_PACKAGE_ethtool=y
-# frpc（内网穿透客户端，配 luci-app-frpc）
-CONFIG_PACKAGE_frpc=y
-CONFIG_PACKAGE_ip-full=y
-CONFIG_PACKAGE_ip6tables-nft=y
-CONFIG_PACKAGE_iperf3=y
-CONFIG_PACKAGE_iptables-mod-extra=y
-CONFIG_PACKAGE_iptables-nft=y
-CONFIG_PACKAGE_irqbalance=y
-# nikki（代理客户端，核心引擎 mihomo-meta，配 luci-app-nikki）
-CONFIG_PACKAGE_mihomo-meta=y
-CONFIG_PACKAGE_nikki=y
-CONFIG_PACKAGE_miniupnpd-nftables=y
-CONFIG_PACKAGE_tcpdump=y
-CONFIG_PACKAGE_ttyd=y
-CONFIG_PACKAGE_yq=y
 
 # ------------------------------------------------------------
-# ⑩ 运行时与依赖库（系统组件 / lib* / ucode / rpcd 等）
+# ⑥ 系统与工具（无 luci-app 对应，按需保留）
 # ------------------------------------------------------------
-CONFIG_PACKAGE_attr=y
+# USB/外置盘自动挂载（若不用可删这两行）
 CONFIG_PACKAGE_block-mount=y
 CONFIG_PACKAGE_blockd=y
-CONFIG_PACKAGE_btrfs-progs=y
-CONFIG_PACKAGE_cgi-io=y
-CONFIG_PACKAGE_dbus=y
-CONFIG_PACKAGE_libatomic=y
-CONFIG_PACKAGE_libattr=y
-CONFIG_PACKAGE_libavahi-client=y
-CONFIG_PACKAGE_libavahi-dbus-support=y
-CONFIG_PACKAGE_libbpf=y
-CONFIG_PACKAGE_libcap=y
-CONFIG_PACKAGE_libcap-ng=y
-CONFIG_PACKAGE_libcurl=y
-CONFIG_PACKAGE_libdaemon=y
-CONFIG_PACKAGE_libdbus=y
-CONFIG_PACKAGE_libelf=y
-CONFIG_PACKAGE_libexpat=y
-CONFIG_PACKAGE_libfuse3=y
-CONFIG_PACKAGE_libgmp=y
-CONFIG_PACKAGE_libgnutls=y
-CONFIG_PACKAGE_libiperf3=y
-CONFIG_PACKAGE_libiptext=y
-CONFIG_PACKAGE_libiptext-nft=y
-CONFIG_PACKAGE_libiptext6=y
-CONFIG_PACKAGE_libiwinfo=y
-CONFIG_PACKAGE_libiwinfo-data=y
-CONFIG_PACKAGE_liblua=y
-CONFIG_PACKAGE_liblucihttp=y
-CONFIG_PACKAGE_liblucihttp-lua=y
-CONFIG_PACKAGE_liblucihttp-ucode=y
-CONFIG_PACKAGE_liblzo=y
-CONFIG_PACKAGE_libmount=y
-CONFIG_PACKAGE_libncurses=y
-CONFIG_PACKAGE_libnettle=y
-CONFIG_PACKAGE_libnghttp2=y
-CONFIG_PACKAGE_libopenssl=y
-CONFIG_PACKAGE_libpcap=y
-CONFIG_PACKAGE_libpcre2=y
-CONFIG_PACKAGE_libpopt=y
-CONFIG_PACKAGE_libreadline=y
-CONFIG_PACKAGE_libseccomp=y
-CONFIG_PACKAGE_libstdcpp=y
-CONFIG_PACKAGE_libtasn1=y
-CONFIG_PACKAGE_libtirpc=y
-CONFIG_PACKAGE_libubus-lua=y
-CONFIG_PACKAGE_liburing=y
-CONFIG_PACKAGE_libuv=y
-CONFIG_PACKAGE_libwebsockets-full=y
-CONFIG_PACKAGE_libxtables=y
-CONFIG_PACKAGE_lua=y
-CONFIG_PACKAGE_resolveip=y
-CONFIG_PACKAGE_rpcd=y
-CONFIG_PACKAGE_rpcd-mod-file=y
-CONFIG_PACKAGE_rpcd-mod-iwinfo=y
-CONFIG_PACKAGE_rpcd-mod-luci=y
-CONFIG_PACKAGE_rpcd-mod-rpcsys=y
-CONFIG_PACKAGE_rpcd-mod-rrdns=y
-CONFIG_PACKAGE_rpcd-mod-ucode=y
-CONFIG_PACKAGE_terminfo=y
-CONFIG_PACKAGE_ucode-mod-html=y
-CONFIG_PACKAGE_ucode-mod-log=y
-CONFIG_PACKAGE_ucode-mod-lua=y
-CONFIG_PACKAGE_ucode-mod-math=y
-CONFIG_PACKAGE_ucode-mod-socket=y
-CONFIG_PACKAGE_uhttpd=y
-CONFIG_PACKAGE_uhttpd-mod-ubus=y
-CONFIG_PACKAGE_xtables-nft=y
-
-# ------------------------------------------------------------
-# ⑪ 加密 / TLS 库特性（OpenSSL · GnuTLS · libcurl）
-# ------------------------------------------------------------
-CONFIG_GNUTLS_ALPN=y
-CONFIG_GNUTLS_ANON=y
-CONFIG_GNUTLS_DTLS_SRTP=y
-CONFIG_GNUTLS_HEARTBEAT=y
-CONFIG_GNUTLS_OCSP=y
-CONFIG_GNUTLS_PSK=y
-CONFIG_LIBCURL_COOKIES=y
-CONFIG_LIBCURL_FILE=y
-CONFIG_LIBCURL_FTP=y
-CONFIG_LIBCURL_HTTP=y
-CONFIG_LIBCURL_HTTP2=y
-CONFIG_LIBCURL_HTTP_AUTH=y
-CONFIG_LIBCURL_MBEDTLS=y
-CONFIG_LIBCURL_NO_SMB="!"
-CONFIG_LIBCURL_PROXY=y
-CONFIG_LIBCURL_UNIX_SOCKETS=y
-# 不要 zlib 压缩（curl 特性）
-# CONFIG_LIBCURL_ZLIB is not set
-CONFIG_OPENSSL_ENGINE=y
-CONFIG_OPENSSL_OPTIMIZE_SPEED=y
-CONFIG_OPENSSL_WITH_ASM=y
-CONFIG_OPENSSL_WITH_CHACHA_POLY1305=y
-CONFIG_OPENSSL_WITH_CMS=y
-CONFIG_OPENSSL_WITH_DEPRECATED=y
-CONFIG_OPENSSL_WITH_ERROR_MESSAGES=y
-CONFIG_OPENSSL_WITH_IDEA=y
-CONFIG_OPENSSL_WITH_MDC2=y
-CONFIG_OPENSSL_WITH_PSK=y
-CONFIG_OPENSSL_WITH_SEED=y
-CONFIG_OPENSSL_WITH_SRP=y
-CONFIG_OPENSSL_WITH_TLS13=y
-CONFIG_OPENSSL_WITH_WHIRLPOOL=y
-CONFIG_PCRE2_JIT_ENABLED=y
+# CPU 中断均衡（软路由多网卡有益）
+CONFIG_PACKAGE_irqbalance=y
+# 诊断工具
+CONFIG_PACKAGE_ethtool=y
+CONFIG_PACKAGE_iperf3=y
+CONFIG_PACKAGE_tcpdump=y
