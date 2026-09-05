@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+# 性能调优：CPU governor -> performance + 禁用深 C 状态（降低软路由转发延迟）
+# 迁移自路由器 /etc/rc.local 的 perf 段（2026-09）。
+# 放 init.d 而非 rc.local：新增文件不受 sysupgrade 保留清单影响，升级自动生效。
+START=98
+
+start() {
+	# CPU 调度器切换为 performance
+	for c in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+		[ -w "$c" ] && echo performance > "$c" 2>/dev/null
+	done
+	# 禁用深 C 状态（C6~C10），减少唤醒延迟
+	for s in /sys/devices/system/cpu/cpu*/cpuidle/state*; do
+		n=$(cat "$s/name" 2>/dev/null)
+		case "$n" in
+			C6|C7s|C8|C9|C10)
+				echo 1 > "$s/disable" 2>/dev/null
+				;;
+		esac
+	done
+}
