@@ -78,15 +78,13 @@ jobs:
       - name: Configure source
         run: |
           cat feeds.conf.extra >> openwrt/feeds.conf.default
-          cd openwrt
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
-          cd ..
+          # 把 cd 限制在子 shell 内：openwrt 是指向 /workdir 的符号链接，
+          # 在外层 cd 进去再 cd .. 会落到 /workdir 而不是 workspace
+          ( cd openwrt && ./scripts/feeds update -a && ./scripts/feeds install -a )
           cp config openwrt/.config
           mkdir -p openwrt/files
           cp -a files/. openwrt/files/
-          cd openwrt
-          make defconfig
+          make -C openwrt defconfig
 
       - name: Verify defconfig kept requested symbols
         run: |
