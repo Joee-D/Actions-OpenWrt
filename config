@@ -10,9 +10,10 @@ CONFIG_TARGET_ROOTFS_PARTSIZE=2048
 # CONFIG_TARGET_ROOTFS_EXT4FS is not set
 # CONFIG_TARGET_ROOTFS_TARGZ is not set
 
-# ③ 内核：不带调试信息省空间，kmod 只需显式保留 BBR
+# ③ 内核：不带调试信息省空间；kmod 只需 BBR + sch_fq（BBR 首选 fq 队列）
 # CONFIG_KERNEL_DEBUG_INFO is not set
 CONFIG_PACKAGE_kmod-tcp-bbr=y
+CONFIG_PACKAGE_kmod-sched=y
 
 # ④ LuCI 与中文（zh-cn 包自动补全；若升级后界面变英文，加回 luci-i18n-base-zh-cn）
 CONFIG_LUCI_LANG_zh_Hans=y
