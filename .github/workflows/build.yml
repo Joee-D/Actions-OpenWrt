@@ -24,6 +24,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
+        with:
+          # 没有任何步骤需要 git push（发版用 GH_TOKEN），不必把 token 留在 .git/config
+          persist-credentials: false
 
       - name: Install dependencies
         env:
@@ -34,8 +37,7 @@ jobs:
           if [ -x /usr/local/bin/runc ]; then
             sudo mv /usr/local/bin/runc /usr/local/bin/runc.disabled
           fi
-          sudo mkdir -p /workdir
-          sudo chown "$USER:$(id -gn)" /workdir
+          sudo install -d -o "$USER" -g "$(id -gn)" /workdir
 
       - name: Clone source
         working-directory: /workdir
@@ -115,10 +117,10 @@ jobs:
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenWrt_build_logs_${{ github.run_id }}
-          path: |
-            openwrt/.config
-            openwrt/logs/
-            openwrt/tmp/log/
+          # 只传 defconfig 后的 .config（用于复现本次失败）。
+          # 原来的 openwrt/logs/ 需 CONFIG_BUILD_LOG=y 才存在，且只写 <pkg>/error.txt；
+          # openwrt/tmp/log/ 在 OpenWrt 源码里没有任何写入点。
+          path: openwrt/.config
           if-no-files-found: ignore
           retention-days: 7
 
