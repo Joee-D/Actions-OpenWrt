@@ -58,14 +58,18 @@ jobs:
             /workdir/openwrt/staging_dir/host*
             /workdir/openwrt/staging_dir/toolchain-*
           key: openwrt-toolchain-${{ runner.os }}-${{ runner.arch }}-${{ env.REPO_BRANCH }}-${{ steps.toolchain-key.outputs.rev }}-${{ steps.toolchain-key.outputs.target }}
+          # 上游 commit 变化时回退到同分支最近一次缓存，避免工具链全量重编
           restore-keys: |
             openwrt-toolchain-${{ runner.os }}-${{ runner.arch }}-${{ env.REPO_BRANCH }}-${{ steps.toolchain-key.outputs.rev }}-
+            openwrt-toolchain-${{ runner.os }}-${{ runner.arch }}-${{ env.REPO_BRANCH }}-
 
       - name: Cache package downloads
         uses: actions/cache@v6.1.0
         with:
           path: /workdir/openwrt/dl
-          key: openwrt-dl-${{ runner.os }}-${{ env.REPO_BRANCH }}-${{ hashFiles('config', 'feeds.conf.extra') }}
+          # 不要把 config 放进 key：改一个包就会写出新的数 GB 缓存条目，
+          # 挤掉工具链缓存；restore-keys 已能兜住新增依赖的少量文件。
+          key: openwrt-dl-${{ runner.os }}-${{ env.REPO_BRANCH }}-${{ hashFiles('feeds.conf.extra') }}
           restore-keys: |
             openwrt-dl-${{ runner.os }}-${{ env.REPO_BRANCH }}-
 
