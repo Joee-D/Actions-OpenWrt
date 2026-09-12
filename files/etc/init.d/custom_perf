@@ -13,7 +13,7 @@ start() {
 	for s in /sys/devices/system/cpu/cpu*/cpuidle/state*; do
 		n=$(cat "$s/name" 2>/dev/null)
 		case "$n" in
-			C6|C7s|C8|C9|C10)
+			C[6-9]*|C1[0-9]*)
 				echo 1 > "$s/disable" 2>/dev/null
 				;;
 		esac
