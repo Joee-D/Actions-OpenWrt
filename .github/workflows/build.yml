@@ -13,7 +13,7 @@ permissions:
 
 env:
   REPO_URL: https://git.openwrt.org/openwrt/openwrt.git
-  REPO_BRANCH: v25.12.5
+  REPO_BRANCH: openwrt-25.12
   TZ: Asia/Shanghai
 
 jobs:
