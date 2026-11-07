@@ -1,0 +1,44 @@
+# ============================================================
+# OpenWrt 25.12 / armsr-armv8 (arm64) + ext4 rootfs
+# 用途：GitHub Actions 编译后，把 ext4 rootfs 打包成 Docker 镜像
+# ============================================================
+
+# ① 目标平台：ARMv8 通用 EFI（Docker / QEMU / 云主机）
+CONFIG_TARGET_armsr=y
+CONFIG_TARGET_armsr_armv8=y
+CONFIG_TARGET_armsr_armv8_DEVICE_generic=y
+
+# ② 只产出 ext4 rootfs（Docker 镜像由它解包生成）
+CONFIG_TARGET_ROOTFS_EXT4FS=y
+# CONFIG_TARGET_ROOTFS_SQUASHFS is not set
+# CONFIG_TARGET_ROOTFS_TARGZ is not set
+CONFIG_TARGET_IMAGES_GZIP=y
+CONFIG_TARGET_ROOTFS_PARTSIZE=1024
+
+# ③ 容器里没有意义、或依赖宿主内核的东西就不装了：
+#    - kmod-* 依赖宿主内核版本，装进容器也加载不了
+#    - luci-app-dockerman 在容器里属于 Docker-in-Docker
+#    - attendedsysupgrade / block-mount / irqbalance 依赖真实硬件
+# CONFIG_PACKAGE_kmod-tcp-bbr is not set
+
+# ④ LuCI 与常用应用（按需增删）
+CONFIG_LUCI_LANG_zh_Hans=y
+CONFIG_PACKAGE_luci=y
+CONFIG_PACKAGE_luci-ssl=y
+CONFIG_PACKAGE_luci-app-firewall=y
+CONFIG_PACKAGE_luci-app-package-manager=y
+CONFIG_PACKAGE_luci-app-ttyd=y
+CONFIG_PACKAGE_luci-app-nikki=y
+CONFIG_PACKAGE_luci-app-frpc=y
+CONFIG_PACKAGE_luci-app-ddns=y
+CONFIG_PACKAGE_luci-app-upnp=y
+CONFIG_PACKAGE_ddns-scripts-cloudflare=y
+
+# ⑤ 诊断工具
+CONFIG_PACKAGE_curl=y
+CONFIG_PACKAGE_iperf3=y
+CONFIG_PACKAGE_tcpdump=y
+
+# ⑥ 需要时自行加回（示例）：
+# CONFIG_PACKAGE_luci-app-samba4=y
+# CONFIG_PACKAGE_luci-app-dockerman=y   # 一般不要，容器里跑 dockerd 需要额外特权

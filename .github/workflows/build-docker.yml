@@ -1,0 +1,134 @@
+name: OpenWrt Docker (arm64 / ext4)
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+
+concurrency:
+  group: openwrt-docker-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REPO_URL: https://git.openwrt.org/openwrt/openwrt.git
+  REPO_BRANCH: v25.12.6
+  CONFIG_FILE: config.arm64-docker
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set image name
+        # Docker 仓库名必须全小写，GitHub 用户名可能含大写（Joee-D）
+        run: echo "IMAGE_NAME=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/openwrt-arm64" >> "$GITHUB_ENV"
+
+      - name: Install dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo -E apt-get -qq update
+          sudo -E apt-get -qq install build-essential clang flex bison g++ gawk gettext git libncurses-dev libssl-dev python3-distutils python3-setuptools rsync swig unzip zlib1g-dev file wget e2fsprogs
+          # 环境 workaround：搬走 runner 镜像自带的 /usr/local/bin/runc。
+          # 当前配置不需要 dockerman；但以后加回时，moby 的 copy_binaries 会因
+          # 只有 /usr/local/bin/runc 而失败（moby#53442）。保留这步无副作用。
+          if [ -x /usr/local/bin/runc ]; then
+            sudo mv /usr/local/bin/runc /usr/local/bin/runc.disabled
+          fi
+          sudo install -d -o "$USER" -g "$(id -gn)" /workdir
+
+      - name: Clone source
+        working-directory: /workdir
+        run: |
+          git clone --single-branch --depth 1 -b "$REPO_BRANCH" "$REPO_URL" openwrt
+          ln -sf /workdir/openwrt "$GITHUB_WORKSPACE/openwrt"
+
+      - name: Configure source
+        run: |
+          cat feeds.conf.extra >> openwrt/feeds.conf.default
+          ( cd openwrt && ./scripts/feeds update -a && ./scripts/feeds install -a )
+          cp "$CONFIG_FILE" openwrt/.config
+          make -C openwrt defconfig
+          # defconfig 会静默丢掉写错的符号，这里显式确认关键项
+          grep -q '^CONFIG_TARGET_armsr_armv8=y$' openwrt/.config \
+            || { echo "::error::target is not armsr/armv8"; exit 1; }
+          grep -q '^CONFIG_TARGET_ROOTFS_EXT4FS=y$' openwrt/.config \
+            || { echo "::error::ext4 rootfs is disabled"; exit 1; }
+
+      - name: Download package sources
+        working-directory: openwrt
+        run: |
+          make download -j"$(( $(nproc) + 1 ))" || make download -j1 V=s
+
+      - name: Compile firmware
+        working-directory: openwrt
+        run: |
+          make -j"$(( $(nproc) + 1 ))" || make -j1 V=s
+
+      - name: Upload ext4 rootfs
+        uses: actions/upload-artifact@v4
+        with:
+          name: openwrt-armsr-armv8-ext4-${{ github.run_number }}
+          path: /workdir/openwrt/bin/targets/armsr/armv8/*ext4-rootfs.img.gz
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Repack ext4 rootfs for Docker
+        run: |
+          set -euo pipefail
+          img_gz=$(find openwrt/bin/targets/armsr/armv8 -maxdepth 1 -name '*ext4-rootfs.img.gz' -print -quit)
+          test -n "$img_gz" || { echo "::error::ext4 rootfs image not found"; exit 1; }
+
+          work=$(mktemp -d)
+          cleanup() {
+            sudo umount /mnt/owrt 2>/dev/null || true
+            rm -rf "$work"
+          }
+          trap cleanup EXIT
+
+          gzip -dc "$img_gz" > "$work/rootfs.ext4"
+          sudo mkdir -p /mnt/owrt
+          sudo mount -o loop,ro "$work/rootfs.ext4" /mnt/owrt
+
+          # 只保留空目录：/dev /proc /sys /tmp /run 由 Docker 在运行时挂载。
+          # tar 以 root 执行，保留 OpenWrt 的 uid/gid 和权限位。
+          sudo tar -C /mnt/owrt \
+            --exclude='./dev/*' \
+            --exclude='./proc/*' \
+            --exclude='./sys/*' \
+            --exclude='./tmp/*' \
+            --exclude='./run/*' \
+            --exclude='./lost+found' \
+            -cpf docker/rootfs.tar .
+          sudo chown "$USER" docker/rootfs.tar
+
+          ls -lh docker/rootfs.tar
+
+      - name: Login to GHCR
+        run: |
+          echo "${{ github.token }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Build and push image
+        run: |
+          set -euo pipefail
+          version="${REPO_BRANCH#v}"
+          # FROM scratch + ADD tar 不需要 QEMU，但显式 --platform 才能让 manifest
+          # 标记为 linux/arm64；docker-container 驱动负责生成并推送 manifest。
+          docker buildx create --name openwrt-builder --driver docker-container --use --bootstrap
+          docker buildx build \
+            --platform linux/arm64 \
+            --file docker/Dockerfile \
+            --tag "${IMAGE_NAME}:${version}-arm64" \
+            --tag "${IMAGE_NAME}:arm64" \
+            --push \
+            docker

@@ -1,0 +1,12 @@
+config system
+	option hostname 'OpenWrt'
+	option timezone 'CST-8'
+	option zonename 'Asia/Shanghai'
+	option ttylogin '0'
+	option log_size '128'
+	option urandom_seed '0'
+
+# 容器通常没有 CAP_SYS_TIME；关掉 NTP 免得起机报错
+config timeserver 'ntp'
+	option enabled '0'
+	option enable_server '0'
