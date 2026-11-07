@@ -1,0 +1,10 @@
+# /etc/udev/rules.d/70-openwrt-nics.rules
+#
+# 用 MAC 把物理网卡固定成 wan0 / lan0 / lan1，避免 enp1s0/enp2s0 顺序漂移。
+# 先 `ip -br link` 查 MAC，再替换下面的地址；改完 reboot。
+#
+# 注意：正在用来 SSH 的网卡不要直接改名，先接显示器/串口，或改完立刻重启。
+
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="aa:bb:cc:dd:ee:01", NAME="wan0"
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="aa:bb:cc:dd:ee:02", NAME="lan0"
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="aa:bb:cc:dd:ee:03", NAME="lan1"

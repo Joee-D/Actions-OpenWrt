@@ -1,7 +1,0 @@
-#!/bin/sh
-# 容器地址由 Docker 分配：dnsmasq 只做 DNS，不再监听 DHCP。
-uci -q set dhcp.lan.ignore='1'
-uci -q set dhcp.lan.dhcpv4='disabled'
-uci -q set dhcp.lan.dhcpv6='disabled'
-uci -q commit dhcp
-exit 0

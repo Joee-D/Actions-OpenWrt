@@ -1,0 +1,59 @@
+# 主路由模式：host 网络（共享宿主网络栈）
+#
+# 适用：整机专用软路由，两块或更多物理网卡全部交给 OpenWrt。
+# 不适用：NAS/All-in-One（宿主还要用自己的网络）——那种情况用 macvlan /
+#        独立 netns，或干脆把 OpenWrt 跑成 KVM 虚拟机。
+#
+# 启动前：
+#   1. 按 MAC 把网卡改名成 wan0 / lan0 / lan1（见 docker/udev/）
+#   2. 宿主不要再管理这些网卡（NetworkManager / systemd-networkd 放开）
+#   3. 处理 22/53/80 等端口冲突（sshd、systemd-resolved）
+#
+# 修改 WAN_PROTO / WAN_USER / LAN_IFS 后，若 /etc/config/network 已存在，
+# 需要 OPENWRT_NETWORK_FORCE=1 或 docker compose down -v 才会重新生成。
+
+services:
+  openwrt:
+    image: ghcr.io/joee-d/openwrt-arm64:25.12.6-arm64
+    container_name: openwrt
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
+
+    environment:
+      # 宿主机上的稳定网卡名；不是容器里的 eth0/eth1
+      WAN_IF: wan0
+      # dhcp / pppoe / static
+      WAN_PROTO: dhcp
+      # PPPoE 时取消注释并填写：
+      # WAN_USER: "宽带账号"
+      # WAN_PASS: "宽带密码"
+      # 静态 WAN 时填写：
+      # WAN_IP: "1.2.3.4"
+      # WAN_NETMASK: "255.255.255.0"
+      # WAN_GW: "1.2.3.1"
+
+      # 一个或多个 LAN 口，空格分隔；会一起桥接进 br-lan
+      LAN_IFS: "lan0 lan1"
+      LAN_IP: "192.168.1.1"
+      LAN_NETMASK: "255.255.255.0"
+
+      # 需要按环境变量强制重写 network 时打开
+      # OPENWRT_NETWORK_FORCE: "1"
+
+    volumes:
+      # 持久化 /etc（root 密码、LuCI 配置、dropbear key 都在里面）
+      - openwrt-etc:/etc
+      # 让容器里的 modprobe 能找到宿主内核模块
+      - /lib/modules:/lib/modules:ro
+
+    devices:
+      # TUN（nikki/mihomo 的 TUN 模式需要）
+      - /dev/net/tun
+      # PPPoE 需要 /dev/ppp；先 modprobe ppp_generic
+      # - /dev/ppp
+
+    command: ["/sbin/init"]
+
+volumes:
+  openwrt-etc:
